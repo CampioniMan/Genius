@@ -5,49 +5,51 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.u15190.genius.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
 
     @Override
-    protected void onStop(){
-        super.onStop();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Button btnFechar = (Button) findViewById(R.id.btnFechar);
-        btnFechar.setOnClickListener(new View.OnClickListener() {
+        btnFechar.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 finish();
             }
         });
 
-        Button btnTela2 = (Button) findViewById(R.id.btnJogar);
-        btnTela2.setOnClickListener(new View.OnClickListener() {
+        Button btnJogarEasy = (Button) findViewById(R.id.btnJogarEasy);
+        btnJogarEasy.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
-                Intent it = new Intent(MainActivity.this, JogoActivity.class);
-                startActivity(it);
+            public void onClick(View v)
+            {
+                comecaJogo(0);
             }
         });
 
+        Button btnJogarHard = (Button) findViewById(R.id.btnJogarHard);
+        btnJogarHard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                comecaJogo(1);
+            }
+        });
+    }
+
+    private void comecaJogo(int _ehHard)
+    {
+        Intent it = new Intent(MainActivity.this, JogoActivity.class);
+        it.putExtra("ehHard", _ehHard+"");
+        startActivity(it);
     }
 }

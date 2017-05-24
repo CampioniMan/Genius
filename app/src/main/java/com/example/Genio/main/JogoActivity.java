@@ -1,6 +1,7 @@
 package com.example.Genio.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,6 +28,7 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
     static Point size;
     SensorManager sensorManager;
     BallView ballView;
+    JogoCPU cpu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
                 h.postDelayed(this, 100);
             }
         }, 100);      // (takes millis)(alterar os dois!)
+        Intent it = getIntent();
+        cpu = new JogoCPU(Integer.parseInt(it.getStringExtra("ehHard")));
     }
 
     @Override

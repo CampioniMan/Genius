@@ -8,24 +8,33 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.u15190.genius.com.example.Genio.main.MainActivity">
+    tools:context="com.example.u15190.genius.MainActivity">
 
     <Button
-        android:text="Button"
+        android:text="Sair"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="179dp"
-        android:id="@+id/btnJogar" />
-
-    <Button
-        android:text="Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="63dp"
         android:id="@+id/btnFechar"
-        android:layout_below="@+id/btnJogar"
-        android:layout_alignLeft="@+id/btnJogar"
-        android:layout_alignStart="@+id/btnJogar" />
+        android:layout_alignTop="@+id/btnJogarHard"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Jogar Hard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnJogarHard"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/btnJogarEasy"
+        android:layout_alignLeft="@+id/btnJogarEasy"
+        android:layout_alignStart="@+id/btnJogarEasy" />
+
+    <Button
+        android:text="Jogar Easy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:id="@+id/btnJogarEasy"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
