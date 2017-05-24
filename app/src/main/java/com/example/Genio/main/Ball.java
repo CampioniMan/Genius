@@ -1,10 +1,12 @@
-package com.example.u15190.genius;
+package com.example.Genio.main;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+
+import com.example.u15190.genius.R;
 
 /**
  * Created by u15163 on 22/05/2017.
@@ -18,13 +20,15 @@ public class Ball
 
     private Bitmap textura;
     private final Point tamanho = new Point(75, 75);
-    private int raio = 38;
+    private int raio = 38, angulo, lastColor;
 
     public Ball(Resources res)
     {
         xVel = yVel = xAce = yAce = 0.0f;
         local = new Point(0, 0);
         this.textura = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.balldois), tamanho.x, tamanho.y, true);
+        angulo = 0;
+        lastColor = Color.BLUE;
     }
 
     public Point getLocal() {
@@ -161,5 +165,21 @@ public class Ball
             return false;
         }
         return false;
+    }
+
+    public int getAngulo() {
+        return angulo;
+    }
+
+    public void setAngulo(int angulo) {
+        this.angulo = angulo;
+    }
+
+    public int getLastColor() {
+        return lastColor;
+    }
+
+    public void setLastColor(int lastColor) {
+        this.lastColor = lastColor;
     }
 }

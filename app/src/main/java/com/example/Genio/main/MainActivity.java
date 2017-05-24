@@ -1,4 +1,4 @@
-package com.example.u15190.genius;
+package com.example.Genio.main;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,24 +7,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.u15190.genius.R;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop(){
         super.onStop();
-        Alerta("Parou a aplicação");
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        Alerta("Reiniciou a aplicação");
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        Alerta("Janela Destruida....");
     }
 
     @Override
@@ -47,14 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent it = new Intent(MainActivity.this, JogoActivity.class);
                 startActivity(it);
-                //finish();
-
             }
         });
 
-    }
-
-    private void Alerta(String msg){
-        Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
     }
 }
