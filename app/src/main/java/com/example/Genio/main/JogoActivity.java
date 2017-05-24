@@ -29,8 +29,12 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        ballView = new BallView(this);
+
+        Intent it = getIntent();
+        ballView = new BallView(this, Integer.parseInt(it.getStringExtra("ehHard")));
         setContentView(ballView);
+
+        cpu = new JogoCPU();
 
         size = new Point();
         Display display = getWindowManager().getDefaultDisplay();
@@ -43,39 +47,38 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
         final Handler h = new Handler();
         h.postDelayed(new Runnable()
         {
-
             @Override
             public void run()
             {
                 if (ballView.getBola().getAngulo() >= 360)
-                {
-                    ballView.getBola().setAngulo(0);
-                    // selecionar a cor como escolhida
-                }
+                    ballView.getBola().setAngulo(0);// selecionar a cor como escolhida
+
                 if (ballView.getBola().getAngulo() < 360)
                     ballView.getBola().setAngulo(ballView.getBola().getAngulo() + 18);
                 h.postDelayed(this, 100);
             }
         }, 100);      // (takes millis)(alterar os dois!)
-        Intent it = getIntent();
-        cpu = new JogoCPU(Integer.parseInt(it.getStringExtra("ehHard")));
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
-    protected void onStop() {
+    protected void onStop()
+    {
         sensorManager.unregisterListener(this);
         super.onStop();
     }
 
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+    public void onSensorChanged(SensorEvent sensorEvent)
+    {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+        {
             ballView.getBola().setxAce(sensorEvent.values[0]);
             ballView.getBola().setyAce(-sensorEvent.values[1]);
             ballView.getBola().atualizaLocal();
@@ -84,7 +87,5 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 }
