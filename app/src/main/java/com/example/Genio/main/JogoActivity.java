@@ -17,11 +17,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.example.u15190.genius.R;
 
 public class JogoActivity extends AppCompatActivity implements SensorEventListener {
 
