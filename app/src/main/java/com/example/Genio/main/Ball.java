@@ -18,12 +18,13 @@ public class Ball
 
     private Bitmap textura;
     private final Point tamanho = new Point(75, 75);
-    private int raio = 38, angulo, lastColor;
+    private int angulo, lastColor;
+    static int raio = 38;
 
     public Ball(Resources res)
     {
         xVel = yVel = xAce = yAce = 0.0f;
-        local = new Point(0, 0);
+        local = new Point(-50,-50);
         this.textura = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.balldois), tamanho.x, tamanho.y, true);
         angulo = 0;
         lastColor = Color.BLUE;
