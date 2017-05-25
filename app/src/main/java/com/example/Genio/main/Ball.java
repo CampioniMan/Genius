@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 
+import com.example.u15190.genius.R;
+
 /**
  * Created by u15163 on 22/05/2017.
  */

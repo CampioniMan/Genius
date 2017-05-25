@@ -20,6 +20,7 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
     SensorManager sensorManager;
     BallView ballView;
     boolean perdeu;
+    public static final int TEMPO = 50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +52,23 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
                     ballView.getBola().setAngulo(0);// selecionar a cor como escolhida
                     acabouRetacao();
                 }
-                if (ballView.getBola().getAngulo() < 360)
-                    ballView.getBola().setAngulo(ballView.getBola().getAngulo() + 18);
-                h.postDelayed(this, 100);
+                else
+                {
+                    ballView.getBola().setAngulo(ballView.getBola().getAngulo() + 9);
+                }
+                if (ballView.isMostrando())
+                {
+                    ballView.getBola().setAngulo(0);// selecionar a cor como escolhida
+                }
+                h.postDelayed(this, TEMPO);
             }
-        }, 100);      // (takes millis)(alterar os dois!)
+        }, TEMPO);      // (takes millis)(alterar os dois!)
+    }
+
+    // você passa os segundos e ele devolve quantas chamadas da função demora (tipo pra 1s demora 20 chamadas)
+    static public int tempoDeSegundos(int segundos)
+    {
+        return (1000*segundos)/TEMPO;
     }
 
     @Override
@@ -103,11 +116,10 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
                 ballView.setPrintarNoMeio(true);
                 ballView.getBola().setLocal(new Point(-50, -50));
                 ballView.comecarHandler();
-                try {
-                    ballView.getCPU().sortear(this.ballView.CORES);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                ballView.cronometro = 0;
+                ballView.getBola().setAngulo(0);
+                ballView.setPrintarNoMeio(true);
+                ballView.getCPU().sortear(this.ballView.CORES);
             }
             else // acertou e o índice não tá no último
             {
