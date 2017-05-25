@@ -19,19 +19,23 @@ public class Ball
 	private float xVel, yVel, xAce, yAce;
 
     private Bitmap textura;
-    private final Point tamanho = new Point(75, 75);
+    private final Point tamanho = new Point(75, 75); // escala do desenho da bolinha
     private int angulo, lastColor;
     static int raio = 38;
 
     public Ball(Resources res)
     {
-        xVel = yVel = xAce = yAce = 0.0f;
-        local = new Point(-50,-50);
-        this.textura = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.balldois), tamanho.x, tamanho.y, true);
-        angulo = 0;
-        lastColor = Color.BLUE;
+        xVel = yVel = xAce = yAce = 0.0f; // inicializando as velocidades e as acelerações para 0
+        local = new Point(-50,-50);       // iniciando as coordenadas para default
+        angulo = 0;                       // iniciando o ângulo com 0, para não começar errado
+        lastColor = Color.BLUE;           // colocando a primeira cor como AZUL, pois é por default
+
+        // iniciando a textura da bolinha e sua escala
+        this.textura = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
+                (res, R.drawable.balldois), tamanho.x, tamanho.y, true);
     }
 
+    // getters e setters de monte
     public Point getLocal() {
 		return local;
 	}

@@ -24,19 +24,20 @@ public class BallView extends View
 
     public BallView(Context context, int _ehHard)
     {
-        super(context);
+        super(context); // construindo a View
 
-        bola = new Ball(getResources());
-        vetorCores = new int[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW};
-        cpu = new JogoCPU(_ehHard);
-        corGeren = new GerenciaCores();
+        bola = new Ball(getResources()); // criando a classe que mantém a bola
+        vetorCores = new int[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW}; // iniciando os ...
+        // ...valores do vetor que indica as cores atuais
+        cpu = new JogoCPU(_ehHard);     // iniciando a CPU do jogo
+        corGeren = new GerenciaCores(); // iniciando o gerenciador de cores
 
-        estaMostrando = printaMeio = podeFazerIf = true;
-        estaNoUltimo = false;
+        estaMostrando = printaMeio = podeFazerIf = true; // iniciando as variáveis boolean para true
+        estaNoUltimo = false; // iniciando a variável boolean para false
 
-        this.cpu.sortear(vetorCores);
+        this.cpu.sortear(vetorCores); // sorteando a primeira cor
 
-        comecarHandler();
+        comecarHandler(); // começando a cronometrar
     }
     
     public Ball getBola()
@@ -118,21 +119,22 @@ public class BallView extends View
 
     public void comecarHandler()
     {
-        pararHandler = false;
-        cronometro = 1;
+        pararHandler = false; // não é necessário parar o Handler quando ele inicia
+        cronometro = 1;       // o cronômetro não pode começar com um número divisível por 20...
+                              // ...no caso dessa aplicação e de seus cálculos de tempo
 
         h.postDelayed(new Runnable()
         {
             @Override
             public void run()
-            {
-                cronometro++;
-                podeFazerIf = true;
+            { // essa função é recursiva e é chamada de tempos em tempos
+                cronometro++; // somamos o cronômetro para demonstrar o tempo passado
+                podeFazerIf = true; // podemos entrar no IF do método "onDraw"
 
-                if (!pararHandler)
-                    h.postDelayed(this, JogoActivity.TEMPO);
+                if (!pararHandler)  // if para parar a recursão se necessário
+                    h.postDelayed(this, JogoActivity.TEMPO); // recursão
             }
-        }, JogoActivity.TEMPO);
+        }, JogoActivity.TEMPO); // tempo para a primeira chamada
     }
 
 	@Override
@@ -143,12 +145,8 @@ public class BallView extends View
             // criando o pincel para alteração das cores
             Paint paint = new Paint();
 
-            // B G
-            // R Y
-            // left top right bottom
-
-            // chamado a cada 1 segundos(no caso)
-            if (podeFazerIf && estaMostrando && cronometro % tempoHabilitado == 0)
+            // 'entrado' a cada 1 segundos(no caso de estar demonstrando)
+            if (podeFazerIf && estaMostrando && contou(tempoHabilitado))
             {
                 if (cpu.isComecouLoopAgora())        // se o loop da demonstração começou AGORA
                 {
@@ -221,17 +219,15 @@ public class BallView extends View
                 paint.setStrokeWidth(1);
             }
 
-            // Debug (pinta as cores e a atual)
-            paint.setTextSize(30);
-            paint.setColor(Color.BLACK);
-            canvas.drawText(cpu.getFilaAux().toString().replace(Color.GREEN+"", "verde").replace(Color.RED+"", "vermelho").replace(Color.YELLOW+"", "amarelo")
-                    .replace(Color.BLUE+"", "azul"),100, 200, paint);
-            canvas.drawText(cpu.atual+"", 100, 300, paint);
-
             // chamamos o método de desenhar
             invalidate();
         }
         catch(Exception e){}
+    }
+
+    public boolean contou(int segundos)
+    {
+        return cronometro % segundos == 0;
     }
 
     /*
