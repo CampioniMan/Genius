@@ -14,11 +14,25 @@ import java.util.Timer;
 public class BallView extends View
 {
     private Ball bola;
-    public static final int[] CORES = new int[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW};
+    public static final int[] CORES = new int[]{
+            Color.BLUE,
+            Color.GREEN,
+            Color.RED,
+            Color.YELLOW};
+    public static final int[][] CORESRGB = new int[][]{
+            {0, 0, 255},
+            {0, 255, 0},
+            {255, 0, 0},
+            {255, 255, 0}};
+    public static final int[][] CORESESCURASRGB = new int[][]{
+            {0, 0, 153},
+            {0, 153, 0},
+            {153, 0, 0},
+            {204, 204, 0}};
     public int[] vetorCores;
     private JogoCPU cpu;
     private boolean estaMostrando, podeFazerIf, printaMeio, estaNoUltimo, pararHandler;
-    public int cronometro, tempoHabilitado = JogoActivity.tempoDeSegundos(1);
+    public int cronometro, tempoHabilitado = JogoActivity.tempoDeSegundos(1), qtoEscuro = 0;
     final Handler h = new Handler();
     private GerenciaCores corGeren;
 
@@ -74,7 +88,10 @@ public class BallView extends View
     {
         if (bola.estaEm(Color.BLUE))
         {
-            vetorCores[0] = Color.rgb(0, 0, 153);
+            if (!estaMostrando)
+                vetorCores[0] = Color.rgb(CORESESCURASRGB[0][0], CORESESCURASRGB[0][1], CORESESCURASRGB[0][2]);
+            else
+                vetorCores[0] = Color.rgb(CORESRGB[0][0], CORESRGB[0][1], CORESRGB[0][2]-qtoEscuro);
             vetorCores[1] = CORES[1];
             vetorCores[2] = CORES[2];
             vetorCores[3] = CORES[3];
@@ -85,7 +102,10 @@ public class BallView extends View
 
         else if (bola.estaEm(Color.GREEN))
         {
-            vetorCores[1] = Color.rgb(0, 102, 0);
+            if (!estaMostrando)
+                vetorCores[1] = Color.rgb(CORESESCURASRGB[1][0], CORESESCURASRGB[1][1], CORESESCURASRGB[1][2]);
+            else
+                vetorCores[1] = Color.rgb(CORESRGB[1][0], CORESRGB[1][1]-qtoEscuro, CORESRGB[1][2]);
             vetorCores[0] = CORES[0];
             vetorCores[2] = CORES[2];
             vetorCores[3] = CORES[3];
@@ -96,7 +116,10 @@ public class BallView extends View
 
         else if (bola.estaEm(Color.RED))
         {
-            vetorCores[2] = Color.rgb(153, 0, 0);
+            if (!estaMostrando)
+                vetorCores[2] = Color.rgb(CORESESCURASRGB[2][0], CORESESCURASRGB[2][1], CORESESCURASRGB[2][2]);
+            else
+                vetorCores[2] = Color.rgb(CORESRGB[2][0]-qtoEscuro, CORESRGB[2][1], CORESRGB[2][2]);
             vetorCores[1] = CORES[1];
             vetorCores[0] = CORES[0];
             vetorCores[3] = CORES[3];
@@ -107,7 +130,10 @@ public class BallView extends View
 
         else if (bola.estaEm(Color.YELLOW))
         {
-            vetorCores[3] = Color.rgb(204, 204, 0);
+            if (!estaMostrando)
+                vetorCores[3] = Color.rgb(CORESESCURASRGB[3][0], CORESESCURASRGB[3][1], CORESESCURASRGB[3][2]);
+            else
+                vetorCores[3] = Color.rgb(CORESRGB[3][0]-(qtoEscuro/2), CORESRGB[3][1]-(qtoEscuro/2), CORESRGB[3][2]);
             vetorCores[1] = CORES[1];
             vetorCores[2] = CORES[2];
             vetorCores[0] = CORES[0];
@@ -130,7 +156,7 @@ public class BallView extends View
             { // essa função é recursiva e é chamada de tempos em tempos
                 cronometro++; // somamos o cronômetro para demonstrar o tempo passado
                 podeFazerIf = true; // podemos entrar no IF do método "onDraw"
-
+                qtoEscuro += 10;
                 if (!pararHandler)  // if para parar a recursão se necessário
                     h.postDelayed(this, JogoActivity.TEMPO); // recursão
             }
@@ -154,6 +180,8 @@ public class BallView extends View
                     cpu.reseta();                    // coloco o atual do Vector no -1
                 }
                 estaMostrando = corGeren.certezaMostrando();// obtendo se acabou ou não a mostração
+                if (qtoEscuro >= 100)
+                    qtoEscuro = 0;
                 if (!estaMostrando)                  // se não mais está na demonstração
                 {
                     pararHandler = true;             // paramos o handler da demonstração
@@ -219,6 +247,11 @@ public class BallView extends View
                 paint.setStrokeWidth(1);
             }
 
+            canvas.drawText(vetorCores[0]+"", 100, 100, paint);
+            canvas.drawText(vetorCores[1]+"", 100, 200, paint);
+            canvas.drawText(vetorCores[2]+"", 100, 300, paint);
+            canvas.drawText(vetorCores[3]+"", 100, 400, paint);
+
             // chamamos o método de desenhar
             invalidate();
         }
@@ -236,7 +269,7 @@ public class BallView extends View
      */
     private class GerenciaCores
     {
-        // método para mudar a cor do fundo da cor atualmente na demonstração
+        // método para mudar a posição da bolinha para mudar atualmente na demonstração
         public void mudarCor()
         {
             switch (cpu.getAtual()) // baseando-se na atual demonstrativa
