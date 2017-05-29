@@ -90,8 +90,7 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
     {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER && !ballView.isMostrando())
         {
-            ballView.getBola().setxAce(sensorEvent.values[0]);
-            ballView.getBola().setyAce(-sensorEvent.values[1]);
+            ballView.getBola().setCoordAce(new Point((int)sensorEvent.values[0], (int)-sensorEvent.values[1]));
             ballView.getBola().atualizaLocal();
             ballView.getBola().verColisoes();
         }

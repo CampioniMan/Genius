@@ -49,27 +49,27 @@ public class BallView extends View
 
     public BallView(Context context, int _ehHard)
     {
-        super(context); // construindo a View
+        super(context);
 
-        bola = new Ball(getResources()); // criando a classe que mantém a bola
-        vetorCores = new int[]{          // iniciando os valores do vetor que indica as cores atuais
+        bola = new Ball(getResources());
+        vetorCores = new int[]{
                 Color.BLUE,
                 Color.GREEN,
                 Color.RED,
                 Color.YELLOW};
-        cpu = new JogoCPU(_ehHard);      // iniciando a CPU do jogo
-        corGeren = new GerenciaCores();  // iniciando o gerenciador de cores
+        cpu = new JogoCPU(_ehHard);
+        corGeren = new GerenciaCores();
 
-        estaMostrando = printaMeio = podeFazerIf = true; // iniciando as variáveis boolean para true
-        estaNoUltimo = false;                            // iniciando a variável boolean para false
+        estaMostrando = printaMeio = podeFazerIf = true;
+        estaNoUltimo = false;
 
         tempoHabilitado = JogoActivity.tempoDeSegundos(1);
         qtoEscuro = 0;
         velEscuridao = 25f;
 
-        this.cpu.sortear(vetorCores); // sorteando a primeira cor
+        this.cpu.sortear(vetorCores);
 
-        comecarHandler();             // começando a cronometrar
+        comecarHandler();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,33 +97,25 @@ public class BallView extends View
 
     public void atualizar()
     {
-        // verifica qual cor a bola esta
         if (bola.estaEm(Color.BLUE))
         {
-            // se não estiver mostrando as cores, elas serão colocadas como cores de jogo
             if (!estaMostrando)
                 vetorCores[0] = Color.rgb(CORESESCURASRGB[0][0],
                                           CORESESCURASRGB[0][1],
                                           CORESESCURASRGB[0][2]);
-            // se estiver mostrando as cores, elas serão colocadas de modo a piscarem para o jogador
             else
                 vetorCores[0] = Color.rgb(CORESRGB[0][0],
                                           CORESRGB[0][1],
                                           CORESRGB[0][2] - qtoEscuro);
-
-            // atribui as cores restamtes para seus respectivos quadrantes
             vetorCores[1] = CORES[1];
             vetorCores[2] = CORES[2];
             vetorCores[3] = CORES[3];
 
-            // verifica se a ultima cor que a bola ficou é diferente da cor que ele esta
             if (bola.getLastColor() != Color.BLUE && !cpu.isHard())
-                bola.setAngulo(0); // se for diferente, a animação irá resetar
-            bola.setLastColor(Color.BLUE); // no final, será atribuido ao atributo lastColor...
-                                           // ... a cor atual
+                bola.setAngulo(0);
+            bola.setLastColor(Color.BLUE);
         }
 
-        // repete o mesmo processo acima
         else if (bola.estaEm(Color.GREEN))
         {
             if (!estaMostrando)
@@ -142,7 +134,6 @@ public class BallView extends View
             bola.setLastColor(Color.GREEN);
         }
 
-        // repete o mesmo processo acima
         else if (bola.estaEm(Color.RED))
         {
             if (!estaMostrando)
@@ -161,7 +152,6 @@ public class BallView extends View
             bola.setLastColor(Color.RED);
         }
 
-        // repete o mesmo processo acima
         else if (bola.estaEm(Color.YELLOW))
         {
             if (!estaMostrando)
@@ -186,35 +176,31 @@ public class BallView extends View
     {
         try
         {
-            // criando o pincel para alteração das cores
             Paint paint = new Paint();
 
-            // 'entrado' a cada 1 segundos(no caso de estar demonstrando)
             if (podeFazerIf && estaMostrando && contou(tempoHabilitado))
             {
-                if (cpu.isInicioDeFase())        // se o loop da demonstração começou AGORA
+                if (cpu.isInicioDeFase())
                 {
-                    cpu.setInicioDeFase(false);  // falo que não começou mais AGORA
-                    cpu.reseta();                    // coloco o atual do Vector no -1
+                    cpu.setInicioDeFase(false);
+                    cpu.reseta();
                 }
-                estaMostrando = corGeren.certezaMostrando();// obtendo se acabou ou não a mostração
+                estaMostrando = corGeren.certezaMostrando();
                 qtoEscuro = 0;
                 velEscuridao = 25f;
-                if (!estaMostrando)                  // se não mais está na demonstração
+                if (!estaMostrando)
                 {
-                    pararHandler = true;             // paramos o handler da demonstração
-                    cpu.setInicioDeFase(true);   // falamos que vai começar AGORA a demonstração
-                    cronometro++;                    // tiramos COM CERTEZA o cronômetro da contagem
+                    pararHandler = true;
+                    cpu.setInicioDeFase(true);
+                    cronometro++;
                 }
                 else
-                    corGeren.mudarCor();             // altera a cor do fundo da bolinha
-                podeFazerIf = false;                 // já foi um loop, não pode mais ir
+                    corGeren.mudarCor();
+                podeFazerIf = false;
             }
 
-            // atualiza a cor de fundo de onde a bola está
             atualizar();
 
-            // pintando as cores do fundo nas suas respectivas coordenadas
             paint.setColor(vetorCores[0]);
             canvas.drawRect(0, 0,
                             JogoActivity.getSize().x/2 + 38,
@@ -237,22 +223,19 @@ public class BallView extends View
                             JogoActivity.getSize().x + 76  ,
                             JogoActivity.getSize().y + 76,paint);
 
-            // verificando que pode desenhar a bola
-            if (!estaMostrando && !estaNoUltimo) // se não está no modo de demonstração
+            if (!estaMostrando && !estaNoUltimo)
             {
                 if (printaMeio)
-                { // posicionamos a bola no meio (apenas no começo da fase)
+                {
                     this.bola.getLocal().x = (JogoActivity.getSize().x/2 + 38) - Ball.getRaio();
                     this.bola.getLocal().y = (JogoActivity.getSize().y/2 + 38) - Ball.getRaio();
-                    printaMeio = false; // impedimos o loop
+                    printaMeio = false;
                 }
 
-                // desenhamos a bola
                 canvas.drawBitmap(this.bola.getTextura(),
                         this.bola.getLocal().x,
                         this.bola.getLocal().y, null);
 
-                // desenhamos o "loading" circular da bola
                 paint.setColor(Color.WHITE);
                 paint.setStyle(Paint.Style.STROKE);
 
@@ -272,7 +255,6 @@ public class BallView extends View
             canvas.drawText(vetorCores[2]+"", 100, 300, paint);
             canvas.drawText(vetorCores[3]+"", 100, 400, paint);
 
-            // chamamos o método de desenhar
             invalidate();
         }
         catch(Exception e){}
@@ -284,23 +266,22 @@ public class BallView extends View
 
     public void comecarHandler()
     {
-        this.pararHandler = false; // não é necessário parar o Handler quando ele inicia
-        this.cronometro = 1;       // o cronômetro não pode começar com um número divisível por 20...
-                              // ...no caso dessa aplicação e de seus cálculos de tempo
+        this.pararHandler = false;
+        this.cronometro = 1;
 
         this.h.postDelayed(new Runnable()
         {
             @Override
             public void run()
-            {             // essa função é recursiva e é chamada de tempos em tempos
-                cronometro++;             // somamos o cronômetro para demonstrar o tempo passado
-                podeFazerIf = true;       // podemos entrar no IF do método "onDraw"
+            {
+                cronometro++;
+                podeFazerIf = true;
                 qtoEscuro += velEscuridao;
                 velEscuridao -= 0.5f;
-                if (!pararHandler)        // if para parar a recursão se necessário
-                    h.postDelayed(this, JogoActivity.TEMPO); // começa a recursão
+                if (!pararHandler)
+                    h.postDelayed(this, JogoActivity.TEMPO);
             }
-        }, JogoActivity.TEMPO);           // tempo para a primeira chamada
+        }, JogoActivity.TEMPO);
     }
 
     public boolean contou(int segundos)
@@ -328,44 +309,41 @@ public class BallView extends View
      */
     private class GerenciaCores
     {
-        // método para mudar a posição da bolinha para mudar atualmente na demonstração
         public void mudarCor()
         {
-            switch (cpu.getAtual()) // baseando-se na atual demonstrativa
+            switch (cpu.getAtual())
             {
-                case Color.BLUE:    // se for azul, escuremos ela
+                case Color.BLUE:
                     bola.getLocal().x = bola.getLocal().y = 0;
                     break;
 
-                case Color.GREEN: // se for verde, escuremos ela
+                case Color.GREEN:
                     bola.getLocal().x = JogoActivity.getSize().x/2 + 38;
                     bola.getLocal().y = 0;
                     break;
 
-                case Color.RED:   // se for vermelha, escuremos ela
+                case Color.RED:
                     bola.getLocal().x = 0;
                     bola.getLocal().y = JogoActivity.getSize().y/2 + 38;
                     break;
 
-                case Color.YELLOW: // se for amarela, escuremos ela
+                case Color.YELLOW:
                     bola.getLocal().x = JogoActivity.getSize().x/2 + 38;
                     bola.getLocal().y = JogoActivity.getSize().y/2 + 38;
                     break;
             }
         }
 
-        // Esse método verifica a vericidade do avanço para a próxima posição da demonstração
         public boolean certezaMostrando()
         {
-            boolean acabou = false; // retorno (caso tenha acabado o loop de demonstração)
-            if (cpu.estaNoUltimo()) // caso o atual esteja no último
+            boolean acabou = false;
+            if (cpu.estaNoUltimo())
             {
-                acabou = true;      // então acabou
-                cpu.reseta();       // e voltamos o atual para o -1
+                acabou = true;
+                cpu.reseta();
             }
-            cpu.avancar();          // avançamos para o atual ficar 0
-            return !acabou;         // retornamos o inverso do acabou...
-                                    // ...(para melhor entendimento do código de fora dessa função)
+            cpu.avancar();
+            return !acabou;
         }
     }
 }
