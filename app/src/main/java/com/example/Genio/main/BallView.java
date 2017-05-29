@@ -192,9 +192,9 @@ public class BallView extends View
             // 'entrado' a cada 1 segundos(no caso de estar demonstrando)
             if (podeFazerIf && estaMostrando && contou(tempoHabilitado))
             {
-                if (cpu.isComecouLoopAgora())        // se o loop da demonstração começou AGORA
+                if (cpu.isInicioDeFase())        // se o loop da demonstração começou AGORA
                 {
-                    cpu.setComecouLoopAgora(false);  // falo que não começou mais AGORA
+                    cpu.setInicioDeFase(false);  // falo que não começou mais AGORA
                     cpu.reseta();                    // coloco o atual do Vector no -1
                 }
                 estaMostrando = corGeren.certezaMostrando();// obtendo se acabou ou não a mostração
@@ -203,7 +203,7 @@ public class BallView extends View
                 if (!estaMostrando)                  // se não mais está na demonstração
                 {
                     pararHandler = true;             // paramos o handler da demonstração
-                    cpu.setComecouLoopAgora(true);   // falamos que vai começar AGORA a demonstração
+                    cpu.setInicioDeFase(true);   // falamos que vai começar AGORA a demonstração
                     cronometro++;                    // tiramos COM CERTEZA o cronômetro da contagem
                 }
                 else
