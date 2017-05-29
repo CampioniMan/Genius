@@ -8,20 +8,23 @@ import android.graphics.Point;
 
 import com.example.u15190.genius.R;
 
-/**
- * Created by u15163 on 22/05/2017.
- */
-
 public class Ball
 {
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////ATRIBUTOS///////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     private Point local;
+    private Bitmap textura;
+    final Point tamanho = new Point(75, 75); // escala do desenho da bolinha
 
 	private float xVel, yVel, xAce, yAce;
-
-    private Bitmap textura;
-    private final Point tamanho = new Point(75, 75); // escala do desenho da bolinha
     private int angulo, lastColor;
-    static int raio = 38;
+    private static int raio;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////CONSTRUTOR///////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Ball(Resources res)
     {
@@ -29,13 +32,17 @@ public class Ball
         local = new Point(-50,-50);       // iniciando as coordenadas para default
         angulo = 0;                       // iniciando o ângulo com 0, para não começar errado
         lastColor = Color.BLUE;           // colocando a primeira cor como AZUL, pois é por default
+        raio = 38;
 
         // iniciando a textura da bolinha e sua escala
         this.textura = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
                 (res, R.drawable.balldois), tamanho.x, tamanho.y, true);
     }
 
-    // getters e setters de monte
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////GETTERS E SETTERS///////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     public Point getLocal() {
 		return local;
 	}
@@ -44,32 +51,8 @@ public class Ball
 		this.local = local;
 	}
 
-	public float getxVel() {
-		return xVel;
-	}
-
-	public void setxVel(float xVel) {
-		this.xVel = xVel;
-	}
-
-	public float getyVel() {
-		return yVel;
-	}
-
-	public void setyVel(float yVel) {
-		this.yVel = yVel;
-	}
-
-	public float getxAce() {
-		return xAce;
-	}
-
 	public void setxAce(float xAce) {
 		this.xAce = xAce;
-	}
-
-	public float getyAce() {
-		return yAce;
 	}
 
 	public void setyAce(float yAce) {
@@ -80,97 +63,7 @@ public class Ball
 		return textura;
 	}
 
-	public void setTextura(Bitmap textura) {
-		this.textura = textura;
-	}
-
-	public int getRaio() {
-		return raio;
-	}
-
-	public void setRaio(int raio) {
-		this.raio = raio;
-	}
-
-	public Point getTamanho() {
-		return tamanho;
-	}
-    
-    public void atualizaLocal()
-    {
-        float frameTime = 0.666f;
-
-        this.xVel += (this.xAce * frameTime);
-        this.yVel += (this.yAce * frameTime);
-
-        float xS = (this.xVel / 2) * frameTime;
-        float yS = (this.yVel / 2) * frameTime;
-
-        this.local.x -= xS;
-        this.local.y -= yS;
-    }
-
-    public void verColisoes()
-    {
-        if (this.local.x > JogoActivity.size.x) {
-            this.local.x = JogoActivity.size.x;
-            this.xAce = 0;
-            this.xVel = 0;
-        }
-        else if (this.local.x < 0) {
-            this.local.x = 0;
-            this.xAce = 0;
-            this.xVel = 0;
-        }
-
-        if (this.local.y > JogoActivity.size.y) {
-            this.local.y = JogoActivity.size.y;
-            this.yAce = 0;
-            this.yVel = 0;
-        }
-        else if (this.local.y < 0) {
-            this.local.y = 0;
-            this.yAce = 0;
-            this.yVel = 0;
-        }
-    }
-
-    public boolean estaEm(int cor)
-    {
-        if (cor == Color.BLUE)
-        {
-            if (local.x + raio >= 0 && local.y + raio >= 0 && local.x + raio <= JogoActivity.size.x/2 + 38 && local.y + raio <= JogoActivity.size.y/2 + 38)
-            {
-                return true;
-            }
-            return false;
-        }
-        else if (cor == Color.GREEN)
-        {
-            if (local.x + raio >= JogoActivity.size.x/2 + 38 && local.y + raio >= 0 && local.x + raio <= JogoActivity.size.x + 76 && local.y + raio <= JogoActivity.size.y/2 + 38)
-            {
-                return true;
-            }
-            return false;
-        }
-        else if (cor == Color.RED)
-        {
-            if (local.x + raio >= 0 && local.y + raio >= JogoActivity.size.y/2 + 38 && local.x + raio <= JogoActivity.size.x/2 + 38 && local.y + raio <= JogoActivity.size.y + 76)
-            {
-                return true;
-            }
-            return false;
-        }
-        else if (cor == Color.YELLOW)
-        {
-            if (local.x + raio >= JogoActivity.size.x/2 + 38 && local.y + raio >= JogoActivity.size.y/2 + 38 && local.x + raio <= JogoActivity.size.x + 76 && local.y + raio <= JogoActivity.size.y + 76)
-            {
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
+	public static int getRaio() {return raio;}
 
     public int getAngulo() {
         return angulo;
@@ -187,4 +80,89 @@ public class Ball
     public void setLastColor(int lastColor) {
         this.lastColor = lastColor;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////MÉTODOS PRINCIPAIS/////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void atualizaLocal()
+    {
+        float frameTime = 0.666f;
+
+        this.xVel += (this.xAce * frameTime);
+        this.yVel += (this.yAce * frameTime);
+
+        float xS = (this.xVel / 2) * frameTime;
+        float yS = (this.yVel / 2) * frameTime;
+
+        this.local.x -= xS;
+        this.local.y -= yS;
+    }
+
+    public void verColisoes()
+    {
+        if (this.local.x > JogoActivity.getSize().x) {
+            this.local.x = JogoActivity.getSize().x;
+            this.xAce = this.xVel = 0;
+        }
+        else if (this.local.x < 0) {
+            this.local.x = 0;
+            this.xAce = this.xVel = 0;
+        }
+
+        if (this.local.y > JogoActivity.getSize().y) {
+            this.local.y = JogoActivity.getSize().y;
+            this.yAce = this.yVel = 0;
+        }
+        else if (this.local.y < 0) {
+            this.local.y = 0;
+            this.yAce = this.yVel = 0;
+        }
+    }
+
+    public boolean estaEm(int cor)
+    {
+        if (cor == Color.BLUE)
+        {
+            if (local.x + raio >= 0 &&
+                local.y + raio >= 0 &&
+                local.x + raio <= JogoActivity.getSize().x/2 + 38 &&
+                local.y + raio <= JogoActivity.getSize().y/2 + 38)
+                return true;
+
+            return false;
+        }
+        else if (cor == Color.GREEN)
+        {
+            if (local.x + raio >= JogoActivity.getSize().x/2 + 38 &&
+                local.y + raio >= 0 &&
+                local.x + raio <= JogoActivity.getSize().x + 76 &&
+                local.y + raio <= JogoActivity.getSize().y/2 + 38)
+                return true;
+
+            return false;
+        }
+        else if (cor == Color.RED)
+        {
+            if (local.x + raio >= 0 &&
+                local.y + raio >= JogoActivity.getSize().y/2 + 38 &&
+                local.x + raio <= JogoActivity.getSize().x/2 + 38 &&
+                local.y + raio <= JogoActivity.getSize().y + 76)
+                return true;
+
+            return false;
+        }
+        else if (cor == Color.YELLOW)
+        {
+            if (local.x + raio >= JogoActivity.getSize().x/2 + 38 &&
+                local.y + raio >= JogoActivity.getSize().y/2 + 38 &&
+                local.x + raio <= JogoActivity.getSize().x + 76 &&
+                local.y + raio <= JogoActivity.getSize().y + 76)
+                return true;
+
+            return false;
+        }
+        return false;
+    }
+
 }

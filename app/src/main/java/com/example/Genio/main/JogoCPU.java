@@ -65,10 +65,6 @@ public class JogoCPU
             this.atual++;
     }
 
-    public boolean temNada()
-    {
-        return this.fila.size() == 0;
-    }
 
     // pega o valor atual
     public int getAtual()

@@ -16,11 +16,15 @@ import android.widget.Toast;
 
 public class JogoActivity extends AppCompatActivity implements SensorEventListener {
 
-    static Point size;
-    SensorManager sensorManager;
-    BallView ballView;
-    boolean perdeu;
-    public static final int TEMPO = 50;
+    private static Point size;
+    private SensorManager sensorManager;
+    private BallView ballView;
+    static final int TEMPO = 50;
+
+    public static Point getSize()
+    {
+        return size;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +41,6 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
         ballView = new BallView(this, Integer.parseInt(it.getStringExtra("ehHard")));
         setContentView(ballView);
 
-        perdeu = false;
-
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         final Handler h = new Handler();
@@ -53,13 +55,11 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
                     acabouRetacao();
                 }
                 else
-                {
                     ballView.getBola().setAngulo(ballView.getBola().getAngulo() + 9);
-                }
+
                 if (ballView.isMostrando())
-                {
                     ballView.getBola().setAngulo(0);// selecionar a cor como escolhida
-                }
+
                 h.postDelayed(this, TEMPO);
             }
         }, TEMPO);      // (takes millis)(alterar os dois!)
@@ -88,43 +88,31 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent sensorEvent)
     {
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER && !ballView.isMostrando())
         {
-            if (!ballView.isMostrando())
-            {
-                ballView.getBola().setxAce(sensorEvent.values[0]);
-                ballView.getBola().setyAce(-sensorEvent.values[1]);
-                ballView.getBola().atualizaLocal();
-                ballView.getBola().verColisoes();
-            }
+            ballView.getBola().setxAce(sensorEvent.values[0]);
+            ballView.getBola().setyAce(-sensorEvent.values[1]);
+            ballView.getBola().atualizaLocal();
+            ballView.getBola().verColisoes();
         }
     }
 
     public void acabouRetacao()
     {
-        if (ballView.getCPU().getAtual() != ballView.getBola().getLastColor()) // se o atual é diferente do que ele tava, perdeu
-        {
-            perdeu = true;
+        // se o atual é diferente do que ele tava, perdeu
+        if (ballView.getCPU().getAtual() != ballView.getBola().getLastColor())
             finish();
-        }
-        else if (!ballView.isMostrando()) // se não está mostrando
+
+            // se não está mostrando
+        else if (!ballView.isMostrando())
         {
-            if (ballView.getCPU().estaNoUltimo()) // acertou e o índice tá no último
-            {
-                ballView.getCPU().reseta();
-                ballView.setMostrando(true);
-                ballView.setPrintarNoMeio(true);
-                ballView.getBola().setLocal(new Point(-50, -50));
-                ballView.comecarHandler();
-                ballView.cronometro = 0;
-                ballView.getBola().setAngulo(0);
-                ballView.setPrintarNoMeio(true);
-                ballView.getCPU().sortear(this.ballView.CORES);
-            }
-            else // acertou e o índice não tá no último
-            {
+            // acertou e o índice tá no último
+            if (ballView.getCPU().estaNoUltimo())
+                ballView.remomecarFase();
+
+            // acertou e o índice não tá no último
+            else
                 ballView.getCPU().avancar();
-            }
         }
     }
 

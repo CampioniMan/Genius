@@ -13,47 +13,69 @@ import java.util.Timer;
 
 public class BallView extends View
 {
-    private Ball bola;
-    public static final int[] CORES = new int[]{
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////ATRIBUTOS///////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    final Handler h = new Handler();
+    static final int[] CORES = new int[]{
             Color.BLUE,
             Color.GREEN,
             Color.RED,
             Color.YELLOW};
-    public static final int[][] CORESRGB = new int[][]{
+    static final int[][] CORESRGB = new int[][]{
             {0, 0, 255},
             {0, 255, 0},
             {255, 0, 0},
             {255, 255, 0}};
-    public static final int[][] CORESESCURASRGB = new int[][]{
+    static final int[][] CORESESCURASRGB = new int[][]{
             {0, 0, 153},
             {0, 153, 0},
             {153, 0, 0},
             {204, 204, 0}};
-    public int[] vetorCores;
-    private JogoCPU cpu;
+
+    private int[] vetorCores;
     private boolean estaMostrando, podeFazerIf, printaMeio, estaNoUltimo, pararHandler;
-    public int cronometro, tempoHabilitado = JogoActivity.tempoDeSegundos(1), qtoEscuro = 0;
-    final Handler h = new Handler();
+    private int cronometro, tempoHabilitado, qtoEscuro;
+    private float velEscuridao;
+
+    private Ball bola;
+    private JogoCPU cpu;
     private GerenciaCores corGeren;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////CONSTRUTOR///////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public BallView(Context context, int _ehHard)
     {
         super(context); // construindo a View
 
         bola = new Ball(getResources()); // criando a classe que mantém a bola
-        vetorCores = new int[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW}; // iniciando os ...
-        // ...valores do vetor que indica as cores atuais
-        cpu = new JogoCPU(_ehHard);     // iniciando a CPU do jogo
-        corGeren = new GerenciaCores(); // iniciando o gerenciador de cores
+        vetorCores = new int[]{          // iniciando os valores do vetor que indica as cores atuais
+                Color.BLUE,
+                Color.GREEN,
+                Color.RED,
+                Color.YELLOW};
+        cpu = new JogoCPU(_ehHard);      // iniciando a CPU do jogo
+        corGeren = new GerenciaCores();  // iniciando o gerenciador de cores
 
         estaMostrando = printaMeio = podeFazerIf = true; // iniciando as variáveis boolean para true
-        estaNoUltimo = false; // iniciando a variável boolean para false
+        estaNoUltimo = false;                            // iniciando a variável boolean para false
+
+        tempoHabilitado = JogoActivity.tempoDeSegundos(1);
+        qtoEscuro = 0;
+        velEscuridao = 25f;
 
         this.cpu.sortear(vetorCores); // sorteando a primeira cor
 
-        comecarHandler(); // começando a cronometrar
+        comecarHandler();             // começando a cronometrar
     }
-    
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////GETTERS E SETTERS///////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     public Ball getBola()
     {
 		return bola;
@@ -69,43 +91,49 @@ public class BallView extends View
         return this.estaMostrando;
     }
 
-    public void setMostrando(boolean _mostrando)
-    {
-        this.estaMostrando = _mostrando;
-    }
-
-	public void setBola(Ball bola)
-    {
-		this.bola = bola;
-	}
-
-    public void setPrintarNoMeio(boolean printar)
-    {
-        this.printaMeio = printar;
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////MÉTODOS PRINCIPAIS/////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void atualizar()
     {
+        // verifica qual cor a bola esta
         if (bola.estaEm(Color.BLUE))
         {
+            // se não estiver mostrando as cores, elas serão colocadas como cores de jogo
             if (!estaMostrando)
-                vetorCores[0] = Color.rgb(CORESESCURASRGB[0][0], CORESESCURASRGB[0][1], CORESESCURASRGB[0][2]);
+                vetorCores[0] = Color.rgb(CORESESCURASRGB[0][0],
+                                          CORESESCURASRGB[0][1],
+                                          CORESESCURASRGB[0][2]);
+            // se estiver mostrando as cores, elas serão colocadas de modo a piscarem para o jogador
             else
-                vetorCores[0] = Color.rgb(CORESRGB[0][0], CORESRGB[0][1], CORESRGB[0][2]-qtoEscuro);
+                vetorCores[0] = Color.rgb(CORESRGB[0][0],
+                                          CORESRGB[0][1],
+                                          CORESRGB[0][2] - qtoEscuro);
+
+            // atribui as cores restamtes para seus respectivos quadrantes
             vetorCores[1] = CORES[1];
             vetorCores[2] = CORES[2];
             vetorCores[3] = CORES[3];
+
+            // verifica se a ultima cor que a bola ficou é diferente da cor que ele esta
             if (bola.getLastColor() != Color.BLUE && !cpu.isHard())
-                bola.setAngulo(0);
-            bola.setLastColor(Color.BLUE);
+                bola.setAngulo(0); // se for diferente, a animação irá resetar
+            bola.setLastColor(Color.BLUE); // no final, será atribuido ao atributo lastColor...
+                                           // ... a cor atual
         }
 
+        // repete o mesmo processo acima
         else if (bola.estaEm(Color.GREEN))
         {
             if (!estaMostrando)
-                vetorCores[1] = Color.rgb(CORESESCURASRGB[1][0], CORESESCURASRGB[1][1], CORESESCURASRGB[1][2]);
+                vetorCores[1] = Color.rgb(CORESESCURASRGB[1][0],
+                                          CORESESCURASRGB[1][1],
+                                          CORESESCURASRGB[1][2]);
             else
-                vetorCores[1] = Color.rgb(CORESRGB[1][0], CORESRGB[1][1]-qtoEscuro, CORESRGB[1][2]);
+                vetorCores[1] = Color.rgb(CORESRGB[1][0],
+                                          CORESRGB[1][1] - qtoEscuro,
+                                          CORESRGB[1][2]);
             vetorCores[0] = CORES[0];
             vetorCores[2] = CORES[2];
             vetorCores[3] = CORES[3];
@@ -114,12 +142,17 @@ public class BallView extends View
             bola.setLastColor(Color.GREEN);
         }
 
+        // repete o mesmo processo acima
         else if (bola.estaEm(Color.RED))
         {
             if (!estaMostrando)
-                vetorCores[2] = Color.rgb(CORESESCURASRGB[2][0], CORESESCURASRGB[2][1], CORESESCURASRGB[2][2]);
+                vetorCores[2] = Color.rgb(CORESESCURASRGB[2][0],
+                                          CORESESCURASRGB[2][1],
+                                          CORESESCURASRGB[2][2]);
             else
-                vetorCores[2] = Color.rgb(CORESRGB[2][0]-qtoEscuro, CORESRGB[2][1], CORESRGB[2][2]);
+                vetorCores[2] = Color.rgb(CORESRGB[2][0] - qtoEscuro,
+                                          CORESRGB[2][1],
+                                          CORESRGB[2][2]);
             vetorCores[1] = CORES[1];
             vetorCores[0] = CORES[0];
             vetorCores[3] = CORES[3];
@@ -128,12 +161,17 @@ public class BallView extends View
             bola.setLastColor(Color.RED);
         }
 
+        // repete o mesmo processo acima
         else if (bola.estaEm(Color.YELLOW))
         {
             if (!estaMostrando)
-                vetorCores[3] = Color.rgb(CORESESCURASRGB[3][0], CORESESCURASRGB[3][1], CORESESCURASRGB[3][2]);
+                vetorCores[3] = Color.rgb(CORESESCURASRGB[3][0],
+                                          CORESESCURASRGB[3][1],
+                                          CORESESCURASRGB[3][2]);
             else
-                vetorCores[3] = Color.rgb(CORESRGB[3][0]-(qtoEscuro/2), CORESRGB[3][1]-(qtoEscuro/2), CORESRGB[3][2]);
+                vetorCores[3] = Color.rgb(CORESRGB[3][0] - (qtoEscuro/2),
+                                          CORESRGB[3][1] - (qtoEscuro/2),
+                                          CORESRGB[3][2]);
             vetorCores[1] = CORES[1];
             vetorCores[2] = CORES[2];
             vetorCores[0] = CORES[0];
@@ -141,26 +179,6 @@ public class BallView extends View
                 bola.setAngulo(0);
             bola.setLastColor(Color.YELLOW);
         }
-    }
-
-    public void comecarHandler()
-    {
-        pararHandler = false; // não é necessário parar o Handler quando ele inicia
-        cronometro = 1;       // o cronômetro não pode começar com um número divisível por 20...
-                              // ...no caso dessa aplicação e de seus cálculos de tempo
-
-        h.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            { // essa função é recursiva e é chamada de tempos em tempos
-                cronometro++; // somamos o cronômetro para demonstrar o tempo passado
-                podeFazerIf = true; // podemos entrar no IF do método "onDraw"
-                qtoEscuro += 10;
-                if (!pararHandler)  // if para parar a recursão se necessário
-                    h.postDelayed(this, JogoActivity.TEMPO); // recursão
-            }
-        }, JogoActivity.TEMPO); // tempo para a primeira chamada
     }
 
 	@Override
@@ -180,8 +198,8 @@ public class BallView extends View
                     cpu.reseta();                    // coloco o atual do Vector no -1
                 }
                 estaMostrando = corGeren.certezaMostrando();// obtendo se acabou ou não a mostração
-                if (qtoEscuro >= 100)
-                    qtoEscuro = 0;
+                qtoEscuro = 0;
+                velEscuridao = 25f;
                 if (!estaMostrando)                  // se não mais está na demonstração
                 {
                     pararHandler = true;             // paramos o handler da demonstração
@@ -196,36 +214,36 @@ public class BallView extends View
             // atualiza a cor de fundo de onde a bola está
             atualizar();
 
-
             // pintando as cores do fundo nas suas respectivas coordenadas
             paint.setColor(vetorCores[0]);
-            canvas.drawRect(0,
-                    0,
-                    JogoActivity.size.x/2 + 38,
-                    JogoActivity.size.y/2 + 38, paint);
+            canvas.drawRect(0, 0,
+                            JogoActivity.getSize().x/2 + 38,
+                            JogoActivity.getSize().y/2 + 38, paint);
+
             paint.setColor(vetorCores[1]);
-            canvas.drawRect(JogoActivity.size.x/2 + 38,
-                    0,
-                    JogoActivity.size.x + 76,
-                    JogoActivity.size.y/2 + 38, paint);
+            canvas.drawRect(JogoActivity.getSize().x/2 + 38, 0,
+                            JogoActivity.getSize().x + 76,
+                            JogoActivity.getSize().y/2 + 38, paint);
+
             paint.setColor(vetorCores[2]);
             canvas.drawRect(0,
-                    JogoActivity.size.y/2 + 38,
-                    JogoActivity.size.x/2 + 38,
-                    JogoActivity.size.y + 76, paint);
+                            JogoActivity.getSize().y/2 + 38,
+                            JogoActivity.getSize().x/2 + 38,
+                            JogoActivity.getSize().y + 76, paint);
+
             paint.setColor(vetorCores[3]);
-            canvas.drawRect(JogoActivity.size.x/2 + 38,
-                    JogoActivity.size.y/2 + 38,
-                    JogoActivity.size.x + 76  ,
-                    JogoActivity.size.y + 76,paint);
+            canvas.drawRect(JogoActivity.getSize().x/2 + 38,
+                            JogoActivity.getSize().y/2 + 38,
+                            JogoActivity.getSize().x + 76  ,
+                            JogoActivity.getSize().y + 76,paint);
 
             // verificando que pode desenhar a bola
-            if (!estaMostrando && !estaNoUltimo)              // se não está no modo de demonstração
+            if (!estaMostrando && !estaNoUltimo) // se não está no modo de demonstração
             {
                 if (printaMeio)
                 { // posicionamos a bola no meio (apenas no começo da fase)
-                    this.bola.getLocal().x = (JogoActivity.size.x/2 + 38) - Ball.raio;
-                    this.bola.getLocal().y = (JogoActivity.size.y/2 + 38) - Ball.raio;
+                    this.bola.getLocal().x = (JogoActivity.getSize().x/2 + 38) - Ball.getRaio();
+                    this.bola.getLocal().y = (JogoActivity.getSize().y/2 + 38) - Ball.getRaio();
                     printaMeio = false; // impedimos o loop
                 }
 
@@ -237,11 +255,13 @@ public class BallView extends View
                 // desenhamos o "loading" circular da bola
                 paint.setColor(Color.WHITE);
                 paint.setStyle(Paint.Style.STROKE);
+
                 RectF rectF = new RectF(
                         bola.getLocal().x - 30,
                         bola.getLocal().y - 30,
                         bola.getLocal().x + 105,
                         bola.getLocal().y + 105);
+
                 paint.setStrokeWidth(4);
                 canvas.drawArc(rectF, (float) 0, this.bola.getAngulo(), false, paint);
                 paint.setStrokeWidth(1);
@@ -258,10 +278,49 @@ public class BallView extends View
         catch(Exception e){}
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////MÉTODOS AUXILIARES////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void comecarHandler()
+    {
+        this.pararHandler = false; // não é necessário parar o Handler quando ele inicia
+        this.cronometro = 1;       // o cronômetro não pode começar com um número divisível por 20...
+                              // ...no caso dessa aplicação e de seus cálculos de tempo
+
+        this.h.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {             // essa função é recursiva e é chamada de tempos em tempos
+                cronometro++;             // somamos o cronômetro para demonstrar o tempo passado
+                podeFazerIf = true;       // podemos entrar no IF do método "onDraw"
+                qtoEscuro += velEscuridao;
+                velEscuridao -= 0.5f;
+                if (!pararHandler)        // if para parar a recursão se necessário
+                    h.postDelayed(this, JogoActivity.TEMPO); // começa a recursão
+            }
+        }, JogoActivity.TEMPO);           // tempo para a primeira chamada
+    }
+
     public boolean contou(int segundos)
     {
         return cronometro % segundos == 0;
     }
+
+    public void remomecarFase()
+    {
+        this.cpu.reseta();
+        this.estaMostrando = this.printaMeio = true;
+        this.bola.setLocal(new Point(-50, -50));
+        this.comecarHandler();
+        this.bola.setAngulo(0);
+        this.cpu.sortear(this.CORES);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////CLASSE AUXILIAR/////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*
     *   Essa classe serve para organizar as cores que serão colocadas na tela, ela é interna porque
@@ -274,24 +333,23 @@ public class BallView extends View
         {
             switch (cpu.getAtual()) // baseando-se na atual demonstrativa
             {
-                case Color.BLUE: // se for azul, escuremos ela
-                    bola.getLocal().x = 0;
-                    bola.getLocal().y = 0;
+                case Color.BLUE:    // se for azul, escuremos ela
+                    bola.getLocal().x = bola.getLocal().y = 0;
                     break;
 
                 case Color.GREEN: // se for verde, escuremos ela
-                    bola.getLocal().x = JogoActivity.size.x/2 + 38;
+                    bola.getLocal().x = JogoActivity.getSize().x/2 + 38;
                     bola.getLocal().y = 0;
                     break;
 
-                case Color.RED: // se for vermelha, escuremos ela
+                case Color.RED:   // se for vermelha, escuremos ela
                     bola.getLocal().x = 0;
-                    bola.getLocal().y = JogoActivity.size.y/2 + 38;
+                    bola.getLocal().y = JogoActivity.getSize().y/2 + 38;
                     break;
 
                 case Color.YELLOW: // se for amarela, escuremos ela
-                    bola.getLocal().x = JogoActivity.size.x/2 + 38;
-                    bola.getLocal().y = JogoActivity.size.y/2 + 38;
+                    bola.getLocal().x = JogoActivity.getSize().x/2 + 38;
+                    bola.getLocal().y = JogoActivity.getSize().y/2 + 38;
                     break;
             }
         }
