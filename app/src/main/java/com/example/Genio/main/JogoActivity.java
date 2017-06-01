@@ -49,16 +49,16 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void run()
             {
-                if (ballView.getBola().getAngulo() >= 360) // deu a volta
+                if (ballView.getImagemBola().getAngulo() >= 360) // deu a volta
                 {
-                    ballView.getBola().setAngulo(0);// selecionar a cor como escolhida
+                    ballView.getImagemBola().setAngulo(0);// selecionar a cor como escolhida
                     acabouRetacao();
                 }
                 else
-                    ballView.getBola().setAngulo(ballView.getBola().getAngulo() + 9);
+                    ballView.getImagemBola().setAngulo(ballView.getImagemBola().getAngulo() + 9);
 
                 if (ballView.isMostrando())
-                    ballView.getBola().setAngulo(0);// selecionar a cor como escolhida
+                    ballView.getImagemBola().setAngulo(0);// selecionar a cor como escolhida
 
                 h.postDelayed(this, TEMPO);
             }
@@ -90,16 +90,16 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
     {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER && !ballView.isMostrando())
         {
-            ballView.getBola().setCoordAce(new Point((int)sensorEvent.values[0], (int)-sensorEvent.values[1]));
-            ballView.getBola().atualizaLocal();
-            ballView.getBola().verColisoes();
+            ballView.getImagemBola().setCoordAce(new Point((int)sensorEvent.values[0], (int)-sensorEvent.values[1]));
+            ballView.getImagemBola().atualizaLocal();
+            ballView.getImagemBola().verColisoes();
         }
     }
 
     public void acabouRetacao()
     {
         // se o atual é diferente do que ele tava, perdeu
-        if (ballView.getCPU().getAtual() != ballView.getBola().getLastColor())
+        if (ballView.getCPU().getAtual() != ballView.getImagemBola().getLastColor())
             finish();
 
             // se não está mostrando

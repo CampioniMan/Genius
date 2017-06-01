@@ -9,8 +9,18 @@ import android.graphics.Point;
 import com.example.u15190.genius.R;
 
 /**
- * Classe feita para conter os dados e métodos que o desenho da bola irá utilizar.
- * @author 15190 e 15163
+ * A classe Ball representa um gerênciador da imagem 'ball.png'.
+ * A classe tem como base:
+ * - 3 instâncias da classe Point que armazenam as coordenadas do local atual da imagem, as
+ *   coordenadas para calcular sua aceleração e velocidade;
+ * - 1 intância constante da classe Point que armazena a escala da imagem;
+ * - 1 instância da classe Bitmap que armazena a imagem em si;
+ * - 2 inteiros que armazenam o ângulo da animação na imagem e a última cor que a imagem esteve;
+ * - 1 inteiro estático que armazena o raio do desenho da imagem;
+ *
+ * Instâncias desta classe permitem gerênciar os dados da imagem no jogo.
+ *
+ * @author Daniel Samogin Campioni e Pedro Luiz Pezoa
  * @since 2017
  * @version 1.0
  */
@@ -33,9 +43,9 @@ public class Ball
     private Bitmap textura;
 
     /**
-     * Atributo constante Point chamado 'tamanho', sua função é armazenar o tamanho da imagem
+     * Atributo constante Point chamado 'escala', sua função é armazenar a escala da imagem
      */
-    final Point tamanho = new Point(75, 75); // escala do desenho da bolinha
+    final Point escala = new Point(75, 75);
 
     /**
      * Atributos ints chamados 'angulo' e 'lastColor', suas funções são armazenar os ângulos do
@@ -44,7 +54,7 @@ public class Ball
     private int angulo, lastColor;
 
     /**
-     * Atributo estático int chamado 'raio', sua função é armazenar o tamanho do raio da imagem
+     * Atributo estático int chamado 'raio', sua função é armazenar o escala do raio da imagem
      */
     private static int raio;
 
@@ -54,7 +64,7 @@ public class Ball
 
     /**
      * Contrutor da classe Ball que instância todos os atributos com seus respectivos valores
-     * @param res classe Resources que irá representar o diretório das imagens
+     * @param res classe Resources que representa o diretório das imagens
      */
     public Ball(Resources res)
     {
@@ -67,7 +77,7 @@ public class Ball
         raio = 38;
 
         this.textura = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
-                (res, R.drawable.balldois), tamanho.x, tamanho.y, true);
+                (res, R.drawable.ball), escala.x, escala.y, true);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +89,7 @@ public class Ball
      * @return um Point que representa as coordenadas atuais da imagem
      */
     public Point getLocal() {
-		return local;
+		return this.local;
 	}
 
     /**
@@ -87,7 +97,7 @@ public class Ball
      * @return um Bitmap que representa a imagem
      */
     public Bitmap getTextura() {
-        return textura;
+        return this.textura;
     }
 
     /**
@@ -101,7 +111,7 @@ public class Ball
      * @return um inteiro que representa o ândulo da animação
      */
     public int getAngulo() {
-        return angulo;
+        return this.angulo;
     }
 
     /**
@@ -109,7 +119,7 @@ public class Ball
      * @return um inteiro que representa a última cor que a imagem ficou
      */
     public int getLastColor() {
-        return lastColor;
+        return this.lastColor;
     }
 
     /**

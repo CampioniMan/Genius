@@ -3,8 +3,17 @@ package com.example.Genio.main;
 import java.util.Vector;
 
 /**
- * Classe feita para conter os dados e métodos que a CPU do jogo irá utilizar.
- * @author 15190 e 15163
+ * A classe JogoCPU representa uma inteligência artificial para sortetios de inteiros que são
+ * representados como cores para o jogo.
+ *
+ * A classe tem como base:
+ * - 1 vetor que armazena inteiros;
+ * - 1 inteiro que armazena a posição atual que está sendo percorrido no vetor;
+ * - 2 booleans que armazenam a dificuldade configurada e o inicio de uma fase;
+ *
+ * Instâncias desta classe permitem gerênciar o vetor de cores e sortear uma mesma.
+ *
+ * @author Daniel Samogin Campioni e Pedro Luiz Pezoa
  * @since 2017
  * @version 1.0
  */
@@ -41,8 +50,8 @@ public class JogoCPU
     public JogoCPU(int _ehHard)
     {
         this.fila = new Vector<Integer>();
-        atual = -1;
-        inicioDeFase = true;
+        this.atual = -1;
+        this.inicioDeFase = true;
 
         if (_ehHard == 0) this.ehHard = false;
         else this.ehHard = true;
@@ -75,7 +84,7 @@ public class JogoCPU
      * @return um boolean que dirá o valor do atributo 'inicioDeFase'
      */
     public boolean isInicioDeFase() {
-        return inicioDeFase;
+        return this.inicioDeFase;
     }
 
     /**
