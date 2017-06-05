@@ -1,4 +1,4 @@
-package com.example.Genio.main;
+package com.example.Genius.main;
 
 import java.util.Vector;
 

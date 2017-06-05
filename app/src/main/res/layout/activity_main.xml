@@ -1,36 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.Genio.main.MainActivity">
+android:id="@+id/activity_main"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.example.Genius.main.MainActivity">
 
-    <Button
-        android:text="Sair"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="63dp"
-        android:id="@+id/btnFechar"
-        android:layout_alignTop="@+id/btnJogarHard"
+        app:srcCompat="@drawable/genius"
+        android:id="@+id/imageView"
+        android:layout_marginTop="14dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+    android:text="Jogar Hard"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/btnJogarHard"
+    android:layout_marginTop="21dp"
+    android:layout_below="@+id/btnJogarEasy"
+    android:layout_alignLeft="@+id/btnJogarEasy"
+    android:layout_alignStart="@+id/btnJogarEasy" />
+
+    <Button
+    android:text="Sair"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:id="@+id/btnFechar"
+        android:layout_below="@+id/btnJogarHard"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:text="Jogar Hard"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnJogarHard"
-        android:layout_marginTop="21dp"
-        android:layout_below="@+id/btnJogarEasy"
-        android:layout_alignLeft="@+id/btnJogarEasy"
-        android:layout_alignStart="@+id/btnJogarEasy" />
+        app:srcCompat="@drawable/bola_menu"
+        android:id="@+id/imageView3"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="130dp" />
 
     <Button
         android:text="Jogar Easy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
         android:id="@+id/btnJogarEasy"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp" />
+
 </RelativeLayout>

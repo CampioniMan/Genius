@@ -1,4 +1,4 @@
-package com.example.Genio.main;
+package com.example.Genius.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -35,8 +35,7 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
         size = new Point();
         Display display = getWindowManager().getDefaultDisplay();
         display.getSize(size);
-        size.x -= 80;
-        size.y -= 320;
+        size.y -= 76;
 
         Intent it = getIntent();
         ballView = new BallView(this, Integer.parseInt(it.getStringExtra("ehHard")));
@@ -51,16 +50,16 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
             public void run()
             {
 
-                if (ballView.getImagemBola().getAngulo() >= 360) // deu a volta
+                if (ballView.getbolinha().getAngulo() >= 360) // deu a volta
                 {
-                    ballView.getImagemBola().setAngulo(0);// selecionar a cor como escolhida
+                    ballView.getbolinha().setAngulo(0);// selecionar a cor como escolhida
                     acabouRetacao();
                 }
                 else
-                    ballView.getImagemBola().setAngulo(ballView.getImagemBola().getAngulo() + 9);
+                    ballView.getbolinha().setAngulo(ballView.getbolinha().getAngulo() + 9);
 
                 if (ballView.isMostrando())
-                    ballView.getImagemBola().setAngulo(0);// selecionar a cor como escolhida
+                    ballView.getbolinha().setAngulo(0);// selecionar a cor como escolhida
 
                 h.postDelayed(this, TEMPO);
             }
@@ -92,16 +91,16 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
     {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER && !ballView.isMostrando())
         {
-            ballView.getImagemBola().setCoordAce(new Point((int)sensorEvent.values[0], (int)-sensorEvent.values[1]));
-            ballView.getImagemBola().atualizaLocal();
-            ballView.getImagemBola().verColisoes();
+            ballView.getbolinha().setCoordAce(new Point((int)sensorEvent.values[0], (int)-sensorEvent.values[1]));
+            ballView.getbolinha().atualizaLocal();
+            ballView.getbolinha().verColisoes();
         }
     }
 
     public void acabouRetacao()
     {
         // se o atual é diferente do que ele tava, perdeu
-        if (ballView.getCPU().getAtual() != ballView.getImagemBola().getLastColor())
+        if (ballView.getCPU().getAtual() != ballView.getbolinha().getLastColor())
             finish();
 
             // se não está mostrando

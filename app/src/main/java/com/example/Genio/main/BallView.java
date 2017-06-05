@@ -1,4 +1,4 @@
-package com.example.Genio.main;
+package com.example.Genius.main;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -48,6 +48,8 @@ public class BallView extends View
      */
     final Handler h = new Handler();
 
+    String oi = "";
+
     /**
      * Atributo constante e estático int chamado 'CORES', sua função é armazenar as cores padrões da
      * classe Color
@@ -55,11 +57,10 @@ public class BallView extends View
     static final int[] CORES = new int[]{ Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW };
 
     /**
-     * Atributos constantes e estáticos ints chamados 'CORESRGB' e 'CORESESCURASRGB', suas funções
-     * são armazenar as cores padrões normia e escuras em formato RGB, respectivamente
+     * Atributo constante e estático int chamado 'CORESESCURASRGB', sua função
+     * é armazenar as cores padrões escuras em formato RGB, respectivamente
      */
     static final int[][]
-            CORESRGB = new int[][]{ {0, 0, 255}, {0, 255, 0}, {255, 0, 0}, {255, 255, 0} },
             CORESESCURASRGB = new int[][]{ {0, 0, 103}, {0, 103, 0}, {103, 0, 0}, {103, 103, 0} };
 
     /**
@@ -69,13 +70,13 @@ public class BallView extends View
     private int[] coresParaMostar;
 
     /**
-     * Atributos booleans chamados 'estaMostrando', 'podeFazerIf', 'printaMeio', 'estaNoUltimo' e
+     * Atributos booleans chamados 'estaMostrando', 'podeFazerIf', 'botaNoMeio', 'estaNoUltimo' e
      * 'pararHandler', suas funções são dizer se a aplicação está mostrando as cores para o jogador,
      * se dentro do método 'onDraw' será realizado uma condição, se a aplicação pode desenhar a
      * imagem 'ball.png' no centro da tela, se a cor que está sendo mostrada é a última da fila
      * e se pode ser interrompido a classe Handler, respectivamente
      */
-    private boolean estaMostrando, podeFazerIf, printaMeio, estaNoUltimo, pararHandler;
+    private boolean estaMostrando, podeFazerIf, botaNoMeio, pararHandler;
 
     /**
      * Atributos booleans chamados 'cronometro', 'tempoHabilitado' e 'tomDePreto', suas funções são
@@ -91,9 +92,9 @@ public class BallView extends View
     private float velEscuridao;
 
     /**
-     * Atributo Ball chamado 'imagemBola', sua função é armazenar a imagem 'boladois.png'
+     * Atributo Ball chamado 'bolinha', sua função é armazenar a imagem 'boladois.png'
      */
-    private Ball imagemBola;
+    private Ball bolinha;
 
     /**
      * Atributo JogoCPU chamado 'cpu', sua função é armazenar a CPU do jogo
@@ -117,13 +118,12 @@ public class BallView extends View
     public BallView(Context context, int _ehHard)
     {
         super(context);
-        this.imagemBola = new Ball(getResources());
+        this.bolinha = new Ball(getResources());
         this.coresParaMostar = new int[]{Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW};
         this.cpu = new JogoCPU(_ehHard);
         this.corGeren = new GerenciaCores();
 
-        this.estaMostrando = printaMeio = podeFazerIf = true;
-        this.estaNoUltimo = false;
+        this.estaMostrando = botaNoMeio = podeFazerIf = true;
 
         this.tempoHabilitado = JogoActivity.tempoDeSegundos(1);
         this.tomDePreto = 0;
@@ -139,12 +139,12 @@ public class BallView extends View
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Método que retorna o valor do atributo 'imagemBola'
-     * @return uma instância da classe Ball que dirá o valor do atributo 'imagemBola'
+     * Método que retorna o valor do atributo 'bolinha'
+     * @return uma instância da classe Ball que dirá o valor do atributo 'bolinha'
      */
-    public Ball getImagemBola()
+    public Ball getbolinha()
     {
-		return this.imagemBola;
+		return this.bolinha;
 	}
 
     /**
@@ -176,7 +176,7 @@ public class BallView extends View
      */
     public void atualizar()
     {
-        if (imagemBola.estaEm(Color.BLUE)) {
+        if (bolinha.estaEm(Color.BLUE)) {
             if (!estaMostrando)
                 coresParaMostar[0] = Color.rgb(CORESESCURASRGB[0][0],
                         CORESESCURASRGB[0][1],
@@ -189,11 +189,11 @@ public class BallView extends View
             coresParaMostar[2] = CORES[2];
             coresParaMostar[3] = CORES[3];
 
-            if (imagemBola.getLastColor() != Color.BLUE && !cpu.isHard())
-                imagemBola.setAngulo(0);
-            imagemBola.setLastColor(Color.BLUE);
+            if (bolinha.getLastColor() != Color.BLUE && !cpu.isHard())
+                bolinha.setAngulo(0);
+            bolinha.setLastColor(Color.BLUE);
             ////////////////////////////////////////////////////////////////////////////////////////////////
-        } else if (imagemBola.estaEm(Color.GREEN)) {
+        } else if (bolinha.estaEm(Color.GREEN)) {
             if (!estaMostrando)
                 coresParaMostar[1] = Color.rgb(CORESESCURASRGB[1][0],
                         CORESESCURASRGB[1][1],
@@ -205,11 +205,11 @@ public class BallView extends View
             coresParaMostar[0] = CORES[0];
             coresParaMostar[2] = CORES[2];
             coresParaMostar[3] = CORES[3];
-            if (imagemBola.getLastColor() != Color.GREEN && !cpu.isHard())
-                imagemBola.setAngulo(0);
-            imagemBola.setLastColor(Color.GREEN);
+            if (bolinha.getLastColor() != Color.GREEN && !cpu.isHard())
+                bolinha.setAngulo(0);
+            bolinha.setLastColor(Color.GREEN);
             ////////////////////////////////////////////////////////////////////////////////////////////////
-        } else if (imagemBola.estaEm(Color.RED)) {
+        } else if (bolinha.estaEm(Color.RED)) {
             if (!estaMostrando)
                 coresParaMostar[2] = Color.rgb(CORESESCURASRGB[2][0],
                         CORESESCURASRGB[2][1],
@@ -221,11 +221,11 @@ public class BallView extends View
             coresParaMostar[1] = CORES[1];
             coresParaMostar[0] = CORES[0];
             coresParaMostar[3] = CORES[3];
-            if (imagemBola.getLastColor() != Color.RED && !cpu.isHard())
-                imagemBola.setAngulo(0);
-            imagemBola.setLastColor(Color.RED);
+            if (bolinha.getLastColor() != Color.RED && !cpu.isHard())
+                bolinha.setAngulo(0);
+            bolinha.setLastColor(Color.RED);
             ////////////////////////////////////////////////////////////////////////////////////////////////
-        } else if (imagemBola.estaEm(Color.YELLOW)) {
+        } else if (bolinha.estaEm(Color.YELLOW)) {
             if (!estaMostrando)
                 coresParaMostar[3] = Color.rgb(CORESESCURASRGB[3][0],
                         CORESESCURASRGB[3][1],
@@ -237,9 +237,9 @@ public class BallView extends View
             coresParaMostar[1] = CORES[1];
             coresParaMostar[2] = CORES[2];
             coresParaMostar[0] = CORES[0];
-            if (imagemBola.getLastColor() != Color.YELLOW && !cpu.isHard())
-                imagemBola.setAngulo(0);
-            imagemBola.setLastColor(Color.YELLOW);
+            if (bolinha.getLastColor() != Color.YELLOW && !cpu.isHard())
+                bolinha.setAngulo(0);
+            bolinha.setLastColor(Color.YELLOW);
         }
     }
 
@@ -252,77 +252,82 @@ public class BallView extends View
     protected void onDraw(Canvas canvas)
     {
         Paint paint = new Paint();
-
-        if (podeFazerIf && estaMostrando && contou(tempoHabilitado))
+        if (podeFazerIf && estaMostrando && contou(tempoHabilitado)) // se contou e está mostrando
         {
-            if (cpu.isInicioDeFase())
+            tomDePreto = 0;                 // resetamos o tom de preto
+            velEscuridao = 0f;              // resetamos a velocidade do aumento da escuridão
+            if (cpu.isInicioDeFase()) // se está iniciando a fase(jogar) AGORA
             {
-                cpu.setInicioDeFase(false);
-                cpu.reseta();
+                cpu.setInicioDeFase(false); // não está mais iniciando a fase AGORA
+                cpu.reseta();               // resetamos o índice do Vector de cores
             }
-            estaMostrando = corGeren.certezaMostrando();
-            tomDePreto = 0;
-            velEscuridao = 0f;
-            if (!estaMostrando)
+            estaMostrando = corGeren.avancarCor(); // avançamos e vemos se deve mostrar ainda
+            if (!estaMostrando)       // se não está mais mostrando
             {
-                pararHandler = true;
-                cpu.setInicioDeFase(true);
-                cronometro++;
+                pararHandler = true;        // paramos a Thread
+                cpu.setInicioDeFase(true);  // colocamos que agora a fase será iniciada
+                cronometro++;               // aumentamos o cronômetro para impossibilitar a entrada
+                oi = "Não está mais mostrando";
+                this.bolinha.setLocal(new Point(-100, -100));
             }
-            else
-                corGeren.mudarCor();
-            podeFazerIf = false;
+            else                      // se está mostrando ainda
+            {
+                corGeren.mudarCor();        // alteramos a cor que está sendo mostrada
+                oi = "Está mostrando ainda";
+            }
+            podeFazerIf = false;            // impossibilitamos a entrada no If novamente
         }
 
         atualizar();
 
         paint.setColor(coresParaMostar[0]);
         canvas.drawRect(0, 0,
-                        JogoActivity.getSize().x/2 + 38,
-                        JogoActivity.getSize().y/2 + 38, paint);
+                        JogoActivity.getSize().x/2,
+                        JogoActivity.getSize().y/2, paint);
 
         paint.setColor(coresParaMostar[1]);
-        canvas.drawRect(JogoActivity.getSize().x/2 + 38, 0,
-                        JogoActivity.getSize().x + 76,
-                        JogoActivity.getSize().y/2 + 38, paint);
+        canvas.drawRect(JogoActivity.getSize().x/2, 0,
+                        JogoActivity.getSize().x,
+                        JogoActivity.getSize().y/2, paint);
 
         paint.setColor(coresParaMostar[2]);
         canvas.drawRect(0,
-                        JogoActivity.getSize().y/2 + 38,
-                        JogoActivity.getSize().x/2 + 38,
-                        JogoActivity.getSize().y + 76, paint);
+                        JogoActivity.getSize().y/2,
+                        JogoActivity.getSize().x/2,
+                        JogoActivity.getSize().y, paint);
 
         paint.setColor(coresParaMostar[3]);
-        canvas.drawRect(JogoActivity.getSize().x/2 + 38,
-                        JogoActivity.getSize().y/2 + 38,
-                        JogoActivity.getSize().x + 76  ,
-                        JogoActivity.getSize().y + 76,paint);
+        canvas.drawRect(JogoActivity.getSize().x/2,
+                        JogoActivity.getSize().y/2,
+                        JogoActivity.getSize().x,
+                        JogoActivity.getSize().y,paint);
 
-        if (!estaMostrando && !estaNoUltimo)
+        if (!estaMostrando) // para botar no meio e desenhar a bolinha com o loading
         {
-            if (printaMeio)
+            if (botaNoMeio)
             {
-                this.imagemBola.getLocal().x = (JogoActivity.getSize().x/2 + 38) - Ball.getRaio();
-                this.imagemBola.getLocal().y = (JogoActivity.getSize().y/2 + 38) - Ball.getRaio();
-                printaMeio = false;
+                this.bolinha.getLocal().x = JogoActivity.getSize().x/2 - Ball.getRaio();
+                this.bolinha.getLocal().y = JogoActivity.getSize().y/2 - Ball.getRaio();
+                botaNoMeio = false;
             }
 
-            canvas.drawBitmap(this.imagemBola.getTextura(),
-                    this.imagemBola.getLocal().x,
-                    this.imagemBola.getLocal().y, null);
+            canvas.drawBitmap(this.bolinha.getTextura(),
+                    this.bolinha.getLocal().x,
+                    this.bolinha.getLocal().y, null);
 
             paint.setColor(Color.WHITE);
             paint.setStyle(Paint.Style.STROKE);
 
             RectF rectF = new RectF(
-                    imagemBola.getLocal().x - 30,
-                    imagemBola.getLocal().y - 30,
-                    imagemBola.getLocal().x + 105,
-                    imagemBola.getLocal().y + 105);
+                    bolinha.getLocal().x - 30,
+                    bolinha.getLocal().y - 30,
+                    bolinha.getLocal().x + 105,
+                    bolinha.getLocal().y + 105);
 
             paint.setStrokeWidth(4);
-            canvas.drawArc(rectF, (float) 0, this.imagemBola.getAngulo(), false, paint);
+            canvas.drawArc(rectF, (float) 0, this.bolinha.getAngulo(), false, paint);
             paint.setStrokeWidth(1);
+            oi = "2)))))))))))))))Não está mais mostrando";
         }
 
         //canvas.drawText(coresParaMostar[0]+"", 100, 100, paint);
@@ -330,6 +335,7 @@ public class BallView extends View
         //canvas.drawText(coresParaMostar[2]+"", 100, 300, paint);
         //canvas.drawText(coresParaMostar[3]+"", 100, 400, paint);
         //canvas.drawText(tomDePreto+"", 100, 500, paint);
+        //canvas.drawText(oi, 100, 100, paint);
 
 
         invalidate();
@@ -381,10 +387,10 @@ public class BallView extends View
     public void remomecarFase()
     {
         this.cpu.reseta();
-        this.estaMostrando = this.printaMeio = true;
-        this.imagemBola.setLocal(new Point(-50, -50));
+        this.estaMostrando = this.botaNoMeio = true;
+        this.bolinha.setLocal(new Point(-50, -50));
         this.comecarHandler();
-        this.imagemBola.setAngulo(0);
+        this.bolinha.setAngulo(0);
         this.cpu.sortear(this.CORES);
     }
 
@@ -415,22 +421,22 @@ public class BallView extends View
             switch (cpu.getAtual())
             {
                 case Color.BLUE:
-                    imagemBola.getLocal().x = imagemBola.getLocal().y = 0;
+                    bolinha.getLocal().x = bolinha.getLocal().y = 0;
                     break;
 
                 case Color.GREEN:
-                    imagemBola.getLocal().x = JogoActivity.getSize().x/2 + 38;
-                    imagemBola.getLocal().y = 0;
+                    bolinha.getLocal().x = JogoActivity.getSize().x/2;
+                    bolinha.getLocal().y = 0;
                     break;
 
                 case Color.RED:
-                    imagemBola.getLocal().x = 0;
-                    imagemBola.getLocal().y = JogoActivity.getSize().y/2 + 38;
+                    bolinha.getLocal().x = 0;
+                    bolinha.getLocal().y = JogoActivity.getSize().y/2;
                     break;
 
                 case Color.YELLOW:
-                    imagemBola.getLocal().x = JogoActivity.getSize().x/2 + 38;
-                    imagemBola.getLocal().y = JogoActivity.getSize().y/2 + 38;
+                    bolinha.getLocal().x = JogoActivity.getSize().x/2;
+                    bolinha.getLocal().y = JogoActivity.getSize().y/2;
                     break;
             }
         }
@@ -439,16 +445,16 @@ public class BallView extends View
          * Método que verifica se o jogo está ainda demonstrando as cores para o jogador.
          * @return um boolean que dirá se a demonstração acabou ou não.
          */
-        public boolean certezaMostrando()
+        public boolean avancarCor()
         {
-            boolean acabou = false;
-            if (cpu.estaNoUltimo())
+            boolean naoAcabou = true; // iniciando a variável
+            if (cpu.estaNoUltimo()) // se está na última cor
             {
-                acabou = true;
-                cpu.reseta();
+                naoAcabou = false; // acabou
+                cpu.reseta();      // resetamos o índice do Vector de cores
             }
-            cpu.avancar();
-            return !acabou;
+            cpu.avancar();         // avançamos para não ficar no -1 e para avançar mesmo...
+            return naoAcabou;      // retornamos se !não acabou ou não acabou
         }
     }
 }

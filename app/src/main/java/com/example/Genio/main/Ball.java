@@ -1,4 +1,4 @@
-package com.example.Genio.main;
+package com.example.Genius.main;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -55,6 +55,7 @@ public class Ball
      * Atributo estático int chamado 'raio', sua função é armazenar o escala do raio da imagem
      */
     private static int raio;
+    private static int diametro;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////CONSTRUTOR///////////////////////////////////////////
@@ -73,6 +74,7 @@ public class Ball
         this.angulo = 0;
         this.lastColor = Color.BLUE;
         raio = 38;
+        diametro = raio*2;
 
         this.textura = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
                 (res, R.drawable.ball), escala.x, escala.y, true);
@@ -179,8 +181,8 @@ public class Ball
      */
     public void verColisoes()
     {
-        if (this.local.x > JogoActivity.getSize().x) {
-            this.local.x = JogoActivity.getSize().x;
+        if (this.local.x + diametro > JogoActivity.getSize().x) {
+            this.local.x = JogoActivity.getSize().x - diametro;
             this.coordAce.x = this.coordVel.x = 0;
         }
         else if (this.local.x < 0) {
@@ -188,8 +190,8 @@ public class Ball
             this.coordAce.x = this.coordVel.x = 0;
         }
 
-        if (this.local.y > JogoActivity.getSize().y) {
-            this.local.y = JogoActivity.getSize().y;
+        if (this.local.y + diametro > JogoActivity.getSize().y) {
+            this.local.y = JogoActivity.getSize().y - diametro;
             this.coordAce.y = this.coordVel.y = 0;
         }
         else if (this.local.y < 0) {
@@ -209,18 +211,18 @@ public class Ball
         {
             if (this.local.x + raio >= 0 &&
                 this.local.y + raio >= 0 &&
-                this.local.x + raio <= JogoActivity.getSize().x/2 + 38 &&
-                this.local.y + raio <= JogoActivity.getSize().y/2 + 38)
+                this.local.x + raio <= JogoActivity.getSize().x/2 &&
+                this.local.y + raio <= JogoActivity.getSize().y/2)
                 return true;
 
             return false;
         }
         else if (cor == Color.GREEN)
         {
-            if (this.local.x + raio >= JogoActivity.getSize().x/2 + 38 &&
+            if (this.local.x + raio >= JogoActivity.getSize().x/2 &&
                 this.local.y + raio >= 0 &&
-                this.local.x + raio <= JogoActivity.getSize().x + 76 &&
-                this.local.y + raio <= JogoActivity.getSize().y/2 + 38)
+                this.local.x + raio <= JogoActivity.getSize().x &&
+                this.local.y + raio <= JogoActivity.getSize().y/2)
                 return true;
 
             return false;
@@ -228,19 +230,19 @@ public class Ball
         else if (cor == Color.RED)
         {
             if (this.local.x + raio >= 0 &&
-                this.local.y + raio >= JogoActivity.getSize().y/2 + 38 &&
-                this.local.x + raio <= JogoActivity.getSize().x/2 + 38 &&
-                this.local.y + raio <= JogoActivity.getSize().y + 76)
+                this.local.y + raio >= JogoActivity.getSize().y/2 &&
+                this.local.x + raio <= JogoActivity.getSize().x/2 &&
+                this.local.y + raio <= JogoActivity.getSize().y)
                 return true;
 
             return false;
         }
         else if (cor == Color.YELLOW)
         {
-            if (this.local.x + raio >= JogoActivity.getSize().x/2 + 38 &&
-                this.local.y + raio >= JogoActivity.getSize().y/2 + 38 &&
-                this.local.x + raio <= JogoActivity.getSize().x + 76 &&
-                this.local.y + raio <= JogoActivity.getSize().y + 76)
+            if (this.local.x + raio >= JogoActivity.getSize().x/2 &&
+                this.local.y + raio >= JogoActivity.getSize().y/2 &&
+                this.local.x + raio <= JogoActivity.getSize().x &&
+                this.local.y + raio <= JogoActivity.getSize().y)
                 return true;
 
             return false;
