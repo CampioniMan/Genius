@@ -1,6 +1,8 @@
 package com.example.Genius.main;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -47,8 +49,6 @@ public class BallView extends View
      * Atributo Handler chamado 'h', sua função é gerênciar a Thread de cronometro
      */
     final Handler h = new Handler();
-
-    String oi = "";
 
     /**
      * Atributo constante e estático int chamado 'CORES', sua função é armazenar as cores padrões da
@@ -189,8 +189,13 @@ public class BallView extends View
             coresParaMostar[2] = CORES[2];
             coresParaMostar[3] = CORES[3];
 
-            if (bolinha.getLastColor() != Color.BLUE && !cpu.isHard())
-                bolinha.setAngulo(0);
+            if (bolinha.getLastColor() != Color.BLUE) {
+                if (!cpu.isHard())
+                    bolinha.setAngulo(0);
+                else
+                this.bolinha.setTextura(Bitmap.createScaledBitmap(BitmapFactory.decodeResource
+                        (getResources(), R.drawable.ball2), bolinha.escala.x, bolinha.escala.y, true));
+            }
             bolinha.setLastColor(Color.BLUE);
             ////////////////////////////////////////////////////////////////////////////////////////////////
         } else if (bolinha.estaEm(Color.GREEN)) {
@@ -205,8 +210,13 @@ public class BallView extends View
             coresParaMostar[0] = CORES[0];
             coresParaMostar[2] = CORES[2];
             coresParaMostar[3] = CORES[3];
-            if (bolinha.getLastColor() != Color.GREEN && !cpu.isHard())
-                bolinha.setAngulo(0);
+            if (bolinha.getLastColor() != Color.GREEN) {
+                if (!cpu.isHard())
+                    bolinha.setAngulo(0);
+                else
+                this.bolinha.setTextura(Bitmap.createScaledBitmap(BitmapFactory.decodeResource
+                        (getResources(), R.drawable.ball5), bolinha.escala.x, bolinha.escala.y, true));
+            }
             bolinha.setLastColor(Color.GREEN);
             ////////////////////////////////////////////////////////////////////////////////////////////////
         } else if (bolinha.estaEm(Color.RED)) {
@@ -221,8 +231,13 @@ public class BallView extends View
             coresParaMostar[1] = CORES[1];
             coresParaMostar[0] = CORES[0];
             coresParaMostar[3] = CORES[3];
-            if (bolinha.getLastColor() != Color.RED && !cpu.isHard())
-                bolinha.setAngulo(0);
+            if (bolinha.getLastColor() != Color.RED) {
+                if (!cpu.isHard())
+                    bolinha.setAngulo(0);
+                else
+                this.bolinha.setTextura(Bitmap.createScaledBitmap(BitmapFactory.decodeResource
+                        (getResources(), R.drawable.ball3), bolinha.escala.x, bolinha.escala.y, true));
+            }
             bolinha.setLastColor(Color.RED);
             ////////////////////////////////////////////////////////////////////////////////////////////////
         } else if (bolinha.estaEm(Color.YELLOW)) {
@@ -237,8 +252,13 @@ public class BallView extends View
             coresParaMostar[1] = CORES[1];
             coresParaMostar[2] = CORES[2];
             coresParaMostar[0] = CORES[0];
-            if (bolinha.getLastColor() != Color.YELLOW && !cpu.isHard())
-                bolinha.setAngulo(0);
+            if (bolinha.getLastColor() != Color.YELLOW) {
+                if (!cpu.isHard())
+                    bolinha.setAngulo(0);
+                else
+                this.bolinha.setTextura(Bitmap.createScaledBitmap(BitmapFactory.decodeResource
+                        (getResources(), R.drawable.ball4), bolinha.escala.x, bolinha.escala.y, true));
+            }
             bolinha.setLastColor(Color.YELLOW);
         }
     }
@@ -267,13 +287,35 @@ public class BallView extends View
                 pararHandler = true;        // paramos a Thread
                 cpu.setInicioDeFase(true);  // colocamos que agora a fase será iniciada
                 cronometro++;               // aumentamos o cronômetro para impossibilitar a entrada
-                oi = "Não está mais mostrando";
                 this.bolinha.setLocal(new Point(-100, -100));
             }
             else                      // se está mostrando ainda
             {
                 corGeren.mudarCor();        // alteramos a cor que está sendo mostrada
-                oi = "Está mostrando ainda";
+            }
+            podeFazerIf = false;            // impossibilitamos a entrada no If novamente
+        }
+
+        if (cpu.isHard() && podeFazerIf && estaMostrando && contou(tempoHabilitado/2)) // se contou e está mostrando
+        {
+            tomDePreto = 0;                 // resetamos o tom de preto
+            velEscuridao = 0f;              // resetamos a velocidade do aumento da escuridão
+            if (cpu.isInicioDeFase()) // se está iniciando a fase(jogar) AGORA
+            {
+                cpu.setInicioDeFase(false); // não está mais iniciando a fase AGORA
+                cpu.reseta();               // resetamos o índice do Vector de cores
+            }
+            estaMostrando = corGeren.avancarCor(); // avançamos e vemos se deve mostrar ainda
+            if (!estaMostrando)       // se não está mais mostrando
+            {
+                pararHandler = true;        // paramos a Thread
+                cpu.setInicioDeFase(true);  // colocamos que agora a fase será iniciada
+                cronometro++;               // aumentamos o cronômetro para impossibilitar a entrada
+                this.bolinha.setLocal(new Point(-100, -100));
+            }
+            else                      // se está mostrando ainda
+            {
+                corGeren.mudarCor();        // alteramos a cor que está sendo mostrada
             }
             podeFazerIf = false;            // impossibilitamos a entrada no If novamente
         }
@@ -327,16 +369,7 @@ public class BallView extends View
             paint.setStrokeWidth(4);
             canvas.drawArc(rectF, (float) 0, this.bolinha.getAngulo(), false, paint);
             paint.setStrokeWidth(1);
-            oi = "2)))))))))))))))Não está mais mostrando";
         }
-
-        //canvas.drawText(coresParaMostar[0]+"", 100, 100, paint);
-        //canvas.drawText(coresParaMostar[1]+"", 100, 200, paint);
-        //canvas.drawText(coresParaMostar[2]+"", 100, 300, paint);
-        //canvas.drawText(coresParaMostar[3]+"", 100, 400, paint);
-        //canvas.drawText(tomDePreto+"", 100, 500, paint);
-        //canvas.drawText(oi, 100, 100, paint);
-
 
         invalidate();
     }
@@ -362,7 +395,7 @@ public class BallView extends View
                 cronometro++;
                 podeFazerIf = true;
                 tomDePreto += velEscuridao;
-                velEscuridao += 0.75f;
+                velEscuridao += (!cpu.isHard())?0.75f:1.50f;
                 if (!pararHandler)
                     h.postDelayed(this, JogoActivity.TEMPO);
             }
@@ -392,6 +425,8 @@ public class BallView extends View
         this.comecarHandler();
         this.bolinha.setAngulo(0);
         this.cpu.sortear(this.CORES);
+        if (this.cpu.isHard())
+            this.cpu.sortear(this.CORES);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -56,7 +56,7 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
                     acabouRetacao();
                 }
                 else
-                    ballView.getbolinha().setAngulo(ballView.getbolinha().getAngulo() + 9);
+                    ballView.getbolinha().setAngulo(ballView.getbolinha().getAngulo() + ((ballView.getCPU().isHard())?18:9));
 
                 if (ballView.isMostrando())
                     ballView.getbolinha().setAngulo(0);// selecionar a cor como escolhida

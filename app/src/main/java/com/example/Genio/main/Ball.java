@@ -100,6 +100,10 @@ public class Ball
         return this.textura;
     }
 
+    public void setTextura(Bitmap novaTextura) {
+        this.textura = novaTextura;
+    }
+
     /**
      * Método estático que retorna o valor do atributo 'raio'
      * @return um inteiro que representa o raio da imagem
