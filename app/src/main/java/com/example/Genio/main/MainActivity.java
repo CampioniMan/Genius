@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.u15190.genius.R;
-
 public class MainActivity extends AppCompatActivity
 {
 
@@ -48,8 +46,13 @@ public class MainActivity extends AppCompatActivity
 
     private void comecaJogo(int _ehHard)
     {
-        Intent it = new Intent(MainActivity.this, JogoActivity.class);
-        it.putExtra("ehHard", _ehHard+"");
-        startActivity(it);
+        try {
+            Intent it = new Intent(MainActivity.this, JogoActivity.class);
+            it.putExtra("ehHard", _ehHard + "");
+            startActivity(it);
+        }
+        catch (Exception e)
+        {
+        }
     }
 }

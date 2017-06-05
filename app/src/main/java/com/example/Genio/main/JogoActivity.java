@@ -28,6 +28,7 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -49,6 +50,7 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void run()
             {
+
                 if (ballView.getImagemBola().getAngulo() >= 360) // deu a volta
                 {
                     ballView.getImagemBola().setAngulo(0);// selecionar a cor como escolhida
@@ -118,7 +120,7 @@ public class JogoActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
-    private void Alerta(String msg){
+    public void Alerta(String msg){
         Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
     }
 }

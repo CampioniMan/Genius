@@ -6,8 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 
-import com.example.u15190.genius.R;
-
 /**
  * A classe Ball representa um gerênciador da imagem 'ball.png'.
  * A classe tem como base:
